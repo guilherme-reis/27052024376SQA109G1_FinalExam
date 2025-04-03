@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.log
+
+# Virtual Environment
+venv/
+
+# Selenium driver cache
+*.crdownload
+.chromedriver/
+
+# VSCode
+.vscode/
+
+# Pytest cache
+.cache/
+
+# macOS
+.DS_Store
