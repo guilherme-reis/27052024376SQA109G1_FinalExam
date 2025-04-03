@@ -1,5 +1,6 @@
 import pytest
 import undetected_chromedriver as uc
+from selenium import webdriver
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
@@ -7,14 +8,14 @@ def pytest_addoption(parser):
 @pytest.fixture
 def driver(request):
     browser = request.config.getoption("--browser")
-    
     if browser == "chrome":
         options = uc.ChromeOptions()
-        options.add_argument("--start-maximized")
         driver = uc.Chrome(options=options)
+    elif browser == "safari":
+        driver = webdriver.Safari()
     else:
-        from selenium.webdriver.safari.webdriver import WebDriver as SafariDriver
-        driver = SafariDriver()
+        raise ValueError(f"Unsupported browser: {browser}")
 
+    driver.maximize_window()
     yield driver
     driver.quit()
