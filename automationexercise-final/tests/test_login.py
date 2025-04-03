@@ -1,12 +1,12 @@
 import pytest
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.mark.usefixtures("driver")
-def test_user_login(driver):
-    with open("test_user.txt", "r") as f:
+def test_user_login(driver, request):
+    browser = request.config.getoption("--browser")
+    with open(f"test_user_{browser}.txt", "r") as f:
         email = f.read().strip()
 
     driver.get("https://automationexercise.com/")
@@ -17,4 +17,8 @@ def test_user_login(driver):
     driver.find_element(By.NAME, "password").send_keys("123456")
     driver.find_element(By.XPATH, "//button[@data-qa='login-button']").click()
 
-    assert "Logged in as" in driver.page_source
+    user_tag = wait.until(
+        EC.presence_of_element_located((By.XPATH, "//li/a[contains(text(),'Logged in as')]"))
+    )
+
+    assert user_tag.is_displayed()
